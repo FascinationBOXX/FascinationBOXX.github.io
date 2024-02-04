@@ -28,14 +28,25 @@
     <div id="result"></div>
 
     <script>
+   <script>
+        function countCharacters(inputText) {
+            let count = 0;
+            for (let i = 0; i < inputText.length; i++) {
+                // 半角文字の場合は0.5を加算、それ以外は1を加算
+                count += inputText.charCodeAt(i) <= 255 ? 0.5 : 1;
+            }
+            return count;
+        }
+
         function repeatString() {
             const inputText = document.getElementById("inputText").value;
+            const inputLength = countCharacters(inputText);
             let repeatedString = "";
             let totalLength = 0;
 
-            while (totalLength + inputText.length <= 140) {
+            while (totalLength + inputLength <= 140) {
                 repeatedString += inputText;
-                totalLength += inputText.length;
+                totalLength += inputLength;
             }
 
             document.getElementById("result").innerText = repeatedString;
@@ -53,7 +64,7 @@
             document.execCommand("copy");
             document.body.removeChild(tempTextArea);
 
-            alert("コピーされました");
+            alert("コピーされました: " + textToCopy);
         }
     </script>
 </body>
