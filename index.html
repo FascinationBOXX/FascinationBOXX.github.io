@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>てすと</title>
+    <title>文字列繰り返しツール</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,48 +13,56 @@
         #result {
             max-width: 80%;
             margin: 0 auto;
+            white-space: pre-wrap;
             overflow-wrap: break-word;
         }
     </style>
 </head>
 <body>
-    <h1>てすと</h1>
+    <h1>文字列繰り返しツール</h1>
     <label for="inputText">任意の文字列：</label>
-    <input type="text" id="inputText" maxlength="140" placeholder="140文字以内">
+    <input type="text" id="inputText" placeholder="ツイート内容">
     <br>
     <button onclick="repeatString()">繰り返し</button>
-    <button onclick="copyToClipboard()">結果のコピー</button>
+    <button onclick="copyToClipboard()">クリップボードにコピー</button>
     <br>
     <div id="result"></div>
 
     <script>
-   <script>
-        function countCharacters(inputText) {
-            let count = 0;
-            for (let i = 0; i < inputText.length; i++) {
-                // 半角文字の場合は0.5を加算、それ以外は1を加算
-                count += inputText.charCodeAt(i) <= 255 ? 0.5 : 1;
+        function calculateTextLength(text) {
+            let length = 0;
+            for (let i = 0; i < text.length; i++) {
+                const char = text.charAt(i);
+                if (/[ぁ-んァ-ン一-龠々]/.test(char)) {
+                    length += 2; // ひらがな、カタカナ、漢字は2としてカウント
+                } else if (/[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(char)) {
+                    length += 2; // 絵文字は2としてカウント
+                } else if (/[!-\/:-@\[-`{-~]/.test(char)) {
+                    length += 1; // 半角の記号は1としてカウント
+                } else {
+                    length += 1; // それ以外は1としてカウント
+                }
             }
-            return count;
+            return length;
         }
 
         function repeatString() {
             const inputText = document.getElementById("inputText").value;
-            const inputLength = countCharacters(inputText);
+            const maxTwitterLength = 280;
             let repeatedString = "";
             let totalLength = 0;
 
-            while (totalLength + inputLength <= 140) {
+            while (totalLength + calculateTextLength(inputText) <= maxTwitterLength) {
                 repeatedString += inputText;
-                totalLength += inputLength;
+                totalLength += calculateTextLength(inputText);
             }
 
-            document.getElementById("result").innerText = repeatedString;
+            document.getElementById("result").textContent = repeatedString;
         }
 
         function copyToClipboard() {
             const resultElement = document.getElementById("result");
-            const textToCopy = resultElement.innerText;
+            const textToCopy = resultElement.textContent;
 
             const tempTextArea = document.createElement("textarea");
             tempTextArea.value = textToCopy;
