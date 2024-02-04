@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>てすと</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #result {
+            max-width: 80%;
+            margin: 0 auto;
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>てすと</h1>
+    <label for="inputText">任意の文字列：</label>
+    <input type="text" id="inputText" maxlength="140" placeholder="140文字以内">
+    <br>
+    <button onclick="repeatString()">繰り返し</button>
+    <button onclick="copyToClipboard()">結果のコピー</button>
+    <br>
+    <div id="result"></div>
+
+    <script>
+        function repeatString() {
+            const inputText = document.getElementById("inputText").value;
+            let repeatedString = "";
+            let totalLength = 0;
+
+            while (totalLength + inputText.length <= 140) {
+                repeatedString += inputText;
+                totalLength += inputText.length;
+            }
+
+            document.getElementById("result").innerText = repeatedString;
+        }
+
+        function copyToClipboard() {
+            const resultElement = document.getElementById("result");
+            const textToCopy = resultElement.innerText;
+
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+
+            tempTextArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempTextArea);
+
+            alert("コピーされました");
+        }
+    </script>
+</body>
+</html>
